@@ -1,14 +1,23 @@
 {
   "name": "@rappopo/dab-mongo",
   "version": "0.0.1",
-  "description": "A MongoDB DAL that kicks butt!",
+  "description": "A MongoDB data access layer that kicks butt!",
   "main": "index.js",
   "scripts": {
     "test": "mocha --test"
   },
   "author": "Ardhi Lukianto <ardhi@lukianto.com>",
   "license": "MIT",
+  "keywords": [
+    "dab",
+    "dab-mongo",
+    "mongodb",
+    "data",
+    "access",
+    "dal"
+  ],
   "dependencies": {
+    "@rappopo/dab": "0.0.1",
     "mongodb": "^2.2.33"
   },
   "devDependencies": {
