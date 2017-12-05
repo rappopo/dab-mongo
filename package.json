@@ -1,0 +1,20 @@
+{
+  "name": "@rappopo/dab-mongo",
+  "version": "0.0.1",
+  "description": "A MongoDB DAL that kicks butt!",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha --test"
+  },
+  "author": "Ardhi Lukianto <ardhi@lukianto.com>",
+  "license": "MIT",
+  "dependencies": {
+    "mongodb": "^2.2.33"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "chai-as-promised": "^7.1.1",
+    "chai-subset": "^1.6.0",
+    "lodash": "^4.17.4"
+  }
+}
