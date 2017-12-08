@@ -180,6 +180,197 @@ class DabMongo extends Dab {
     })
   }
 
+  bulkCreate (body, params) {
+    [params] = this.sanitize(params)
+    this.setClient(params)
+    return new Promise((resolve, reject) => {
+      if (!this._.isArray(body))
+        return reject(new Error('Require array'))
+
+      let coll
+      this._.each(body, (b, i) => {
+        if (!b[this.options.idSrc])
+          b[this.options.idSrc] = this.uuid()
+        body[i] = b
+      })
+      const keys = this._(body).map(this.options.idSrc).value()
+
+      this.client
+      .then(db => {
+        var coll = db.collection(this.options.collection)
+        coll.find({
+          _id: {
+            $in: keys
+          }
+        }, { _id: 1 }).toArray((err, docs) => {
+          if (err)
+            return reject(err)
+          let info = this._.map(docs, '_id'),
+            newBody = this._.clone(body)
+          this._.pullAllWith(newBody, info, (i,x) => {
+            return i._id === x
+          })
+          coll.insertMany(newBody, (err, result) => {
+            if (err)
+              return reject(err)
+            let ok = 0, status = []
+            this._.each(body, (r, i) => {
+              let stat = { success: info.indexOf(r._id) === -1 ? true : false }
+              stat[this.options.idDest] = r._id
+              if (!stat.success)
+                stat.message = 'Exists'
+              else
+                ok++
+              status.push(stat)
+            })
+            let data = {
+              success: true,
+              stat: {
+                ok: ok,
+                fail: body.length - ok,
+                total: body.length
+              },
+              data: status
+            }
+            resolve(data)
+          })    
+        })
+      })
+      .catch(reject)
+    })
+  }
+
+  bulkUpdate (body, params) {
+    [params] = this.sanitize(params)
+    this.setClient(params)
+    return new Promise((resolve, reject) => {
+      if (!this._.isArray(body))
+        return reject(new Error('Require array'))
+
+      let coll
+      this._.each(body, (b, i) => {
+        if (!b[this.options.idSrc])
+          b[this.options.idSrc] = this.uuid()
+        body[i] = b
+      })
+      const keys = this._(body).map(this.options.idSrc).value()
+
+      this.client
+      .then(db => {
+        var coll = db.collection(this.options.collection)
+        coll.find({
+          _id: {
+            $in: keys
+          }
+        }, { _id: 1 }).toArray((err, docs) => {
+          if (err)
+            return reject(err)
+          let info = this._.map(docs, '_id'),
+            newBody = []
+          this._.each(body, b => {
+            if (info.indexOf(b._id) === -1) return
+            newBody.push({
+              replaceOne: { 
+                filter: { _id: b._id },
+                replacement: this._.omit(b, ['_id'])
+              }
+            })
+          })
+
+          coll.bulkWrite(newBody, { ordered: true }, (err, result) => {
+            let ok = 0, status = []
+            this._.each(body, (r, i) => {
+              let stat = { success: info.indexOf(r._id) > -1 ? true : false }
+              stat[this.options.idDest] = r._id
+              if (!stat.success)
+                stat.message = 'Not found'
+              else
+                ok++
+              status.push(stat)
+            })
+            let data = {
+              success: true,
+              stat: {
+                ok: ok,
+                fail: body.length - ok,
+                total: body.length
+              },
+              data: status
+            }
+            resolve(data)
+          })
+        })
+      })
+      .catch(reject)
+
+    })
+  }
+
+  bulkRemove (body, params) {
+    [params] = this.sanitize(params)
+    this.setClient(params)
+    return new Promise((resolve, reject) => {
+      if (!this._.isArray(body))
+        return reject(new Error('Require array'))
+
+      let coll
+      this._.each(body, (b, i) => {
+        if (!b[this.options.idSrc])
+          b[this.options.idSrc] = this.uuid()
+        body[i] = b
+      })
+      const keys = this._(body).map(this.options.idSrc).value()
+
+      this.client
+      .then(db => {
+        var coll = db.collection(this.options.collection)
+        coll.find({
+          _id: {
+            $in: keys
+          }
+        }, { _id: 1 }).toArray((err, docs) => {
+          if (err)
+            return reject(err)
+          let info = this._.map(docs, '_id'),
+            newBody = []
+          this._.each(body, b => {
+            if (info.indexOf(b._id) === -1) return
+            newBody.push({
+              deleteOne: { 
+                filter: { _id: b._id },
+              }
+            })
+          })
+
+          coll.bulkWrite(newBody, { ordered: true }, (err, result) => {
+            let ok = 0, status = []
+            this._.each(body, (r, i) => {
+              let stat = { success: info.indexOf(r._id) > -1 ? true : false }
+              stat[this.options.idDest] = r._id
+              if (!stat.success)
+                stat.message = 'Not found'
+              else
+                ok++
+              status.push(stat)
+            })
+            let data = {
+              success: true,
+              stat: {
+                ok: ok,
+                fail: body.length - ok,
+                total: body.length
+              },
+              data: status
+            }
+            resolve(data)
+          })
+        })
+      })
+      .catch(reject)
+
+    })
+  }
+
 }
 
 module.exports = DabMongo

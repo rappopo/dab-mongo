@@ -1,10 +1,10 @@
 {
   "name": "@rappopo/dab-mongo",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A MongoDB data access layer that kicks butt!",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --test"
+    "test": "mocha --exit"
   },
   "author": "Ardhi Lukianto <ardhi@lukianto.com>",
   "license": "MIT",
@@ -16,8 +16,12 @@
     "access",
     "dal"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rappopo/dab-mongo.git"
+  },
   "dependencies": {
-    "@rappopo/dab": "0.0.1",
+    "@rappopo/dab": "0.0.5",
     "mongodb": "^2.2.33"
   },
   "devDependencies": {

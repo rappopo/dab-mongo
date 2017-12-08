@@ -1,5 +1,39 @@
 # @rappopo/dab-mongo
 
+A [Rappopo DAB](https://github.com/rappopo/dab) implementation for MongoDB. 
+
+## Installation
+
+Simply invoke this command in your project folder:
+
+```
+$ npm install --save @rappopo/dab-mongo
+```
+
+And within your script:
+
+```javascript
+const DabNe = require('@rappopo/dab-ne')
+const dab = new DabNe({
+  url: 'mongodb://localhost:27017/mydb',
+  collection: 'docs'
+})
+...
+dab.findOne('my-doc').then(function(doc) { ... })
+```
+
+## Options
+
+`url`: your MongoDB url endpoint. If it not provided, it defauts to: *mongodb://localhost:27017/test*
+
+`collection`: the collection name. You'll most likely want to give a custom name, otherwise it defaults to *docs*
+
+## Misc
+
+* [Methods](https://github.com/rappopo/dab)
+* [ChangeLog](CHANGELOG.md)
+* Donation: Bitcoin **16HVCkdaNMvw3YdBYGHbtt3K5bmpRmH74Y**
+
 ## License
 
 (The MIT License)
