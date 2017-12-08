@@ -1,6 +1,6 @@
 {
   "name": "@rappopo/dab-mongo",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A MongoDB data access layer that kicks butt!",
   "main": "index.js",
   "scripts": {

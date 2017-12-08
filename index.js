@@ -312,21 +312,16 @@ class DabMongo extends Dab {
     return new Promise((resolve, reject) => {
       if (!this._.isArray(body))
         return reject(new Error('Require array'))
-
-      let coll
       this._.each(body, (b, i) => {
-        if (!b[this.options.idSrc])
-          b[this.options.idSrc] = this.uuid()
-        body[i] = b
+        body[i] = b || this.uuid()
       })
-      const keys = this._(body).map(this.options.idSrc).value()
-
+      let coll
       this.client
       .then(db => {
         var coll = db.collection(this.options.collection)
         coll.find({
           _id: {
-            $in: keys
+            $in: body
           }
         }, { _id: 1 }).toArray((err, docs) => {
           if (err)
@@ -334,10 +329,10 @@ class DabMongo extends Dab {
           let info = this._.map(docs, '_id'),
             newBody = []
           this._.each(body, b => {
-            if (info.indexOf(b._id) === -1) return
+            if (info.indexOf(b) === -1) return
             newBody.push({
               deleteOne: { 
-                filter: { _id: b._id },
+                filter: { _id: b },
               }
             })
           })
@@ -345,8 +340,8 @@ class DabMongo extends Dab {
           coll.bulkWrite(newBody, { ordered: true }, (err, result) => {
             let ok = 0, status = []
             this._.each(body, (r, i) => {
-              let stat = { success: info.indexOf(r._id) > -1 ? true : false }
-              stat[this.options.idDest] = r._id
+              let stat = { success: info.indexOf(r) > -1 ? true : false }
+              stat[this.options.idDest] = r
               if (!stat.success)
                 stat.message = 'Not found'
               else
