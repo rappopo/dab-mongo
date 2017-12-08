@@ -13,8 +13,8 @@ $ npm install --save @rappopo/dab-mongo
 And within your script:
 
 ```javascript
-const DabNe = require('@rappopo/dab-ne')
-const dab = new DabNe({
+const DabMongo = require('@rappopo/dab-mongo')
+const dab = new DabMongo({
   url: 'mongodb://localhost:27017/mydb',
   collection: 'docs'
 })
