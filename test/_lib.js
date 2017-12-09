@@ -2,12 +2,17 @@
 
 const fs = require('fs'),
   _ = require('lodash'),
+  async = require('async'),
   client = require('mongodb').MongoClient
 
 module.exports = {
   _: _,
   options: {
     url: 'mongodb://localhost:27017/test',
+    collection: 'docs'
+  },
+  options1: {
+    url: 'mongodb://localhost:27017/test1',
     collection: 'docs'
   },
   dummyData: [
@@ -21,23 +26,16 @@ module.exports = {
   ],
   timeout: 5000,
   resetDb: function (callback) {
-    let coll, conn
-    client.connect(this.options.url)
-    .then(db => {
-      conn = db
-      coll = db.collection(this.options.collection)
-      return coll.removeMany()
-    })
-    .then(result => {
-      return coll.insertMany(this.dummyData)
-    })
-    .then(result => {
-      conn.close()
-      callback()
-    })
-    .catch(err => {
-      conn.close()
-      callback(err)
-    })
+    let coll, me = this
+    async.mapSeries(['options', 'options1'], function(o, callb) {
+      client.connect(me[o].url, function(err, db) {
+        let coll = db.collection(me[o].collection)
+        coll.removeMany(function(err) {
+          coll.insertMany(me.dummyData, function(err) {
+            callb()
+          })
+        })
+      })
+    }, callback)
   }
 }

@@ -210,6 +210,7 @@ class DabMongo extends Dab {
           this._.pullAllWith(newBody, info, (i,x) => {
             return i._id === x
           })
+          if (this._.isEmpty(newBody)) newBody.push({})
           coll.insertMany(newBody, (err, result) => {
             if (err)
               return reject(err)
@@ -229,9 +230,10 @@ class DabMongo extends Dab {
                 ok: ok,
                 fail: body.length - ok,
                 total: body.length
-              },
-              data: status
+              }
             }
+            if (params.withDetail)
+              data.detail = status
             resolve(data)
           })    
         })
@@ -276,6 +278,7 @@ class DabMongo extends Dab {
               }
             })
           })
+          if (this._.isEmpty(newBody)) newBody.push({})
 
           coll.bulkWrite(newBody, { ordered: true }, (err, result) => {
             let ok = 0, status = []
@@ -294,9 +297,10 @@ class DabMongo extends Dab {
                 ok: ok,
                 fail: body.length - ok,
                 total: body.length
-              },
-              data: status
+              }
             }
+            if (params.withDetail)
+              data.detail = status
             resolve(data)
           })
         })
@@ -336,6 +340,7 @@ class DabMongo extends Dab {
               }
             })
           })
+          if (this._.isEmpty(newBody)) newBody.push({})
 
           coll.bulkWrite(newBody, { ordered: true }, (err, result) => {
             let ok = 0, status = []
@@ -354,9 +359,10 @@ class DabMongo extends Dab {
                 ok: ok,
                 fail: body.length - ok,
                 total: body.length
-              },
-              data: status
+              }
             }
+            if (params.withDetail)
+              data.detail = status
             resolve(data)
           })
         })
