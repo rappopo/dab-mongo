@@ -15,18 +15,24 @@ And within your script:
 ```javascript
 const DabMongo = require('@rappopo/dab-mongo')
 const dab = new DabMongo({
-  url: 'mongodb://localhost:27017/mydb',
-  collection: 'docs'
+  url: 'mongodb://localhost:27017',
+  dbName: 'mydb'
 })
+// prepare collections
+dab.createCollection({ name: 'test' })
+  .then(result => {
+    return dab.bulkCreate(data, { collection: 'test' })
+  })
 ...
-dab.findOne('my-doc').then(function(doc) { ... })
+// lets dab!
+dab.findOne('my-doc', 'test').then(function(doc) { ... })
 ```
 
 ## Options
 
-`url`: your MongoDB url endpoint. If it not provided, it defauts to: *mongodb://localhost:27017/test*
+`url`: your MongoDB url endpoint. If it not provided, it defauts to: *mongodb://localhost:27017*
 
-`collection`: the collection name. You'll most likely want to give a custom name, otherwise it defaults to *docs*
+`dbName`: the database name. You'll most likely want to give a custom name, otherwise it defaults to *test*
 
 ## Features
 
@@ -40,6 +46,9 @@ dab.findOne('my-doc').then(function(doc) { ... })
 * [x] [bulkRemove](https://docs.rappopo.com/dab/method/bulk-remove/)
 * [x] [copyFrom](https://docs.rappopo.com/dab/method/copy-from/)
 * [x] [copyTo](https://docs.rappopo.com/dab/method/copy-to/)
+* [x] [createCollection](https://docs.rappopo.com/dab/method/create-collection/)
+* [x] [renameCollection](https://docs.rappopo.com/dab/method/rename-collection/)
+* [x] [removeCollection](https://docs.rappopo.com/dab/method/remove-collection/)
 
 ## Misc
 

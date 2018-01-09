@@ -13,26 +13,16 @@ describe('setOptions', function () {
   it('should return the default options', function () {
     const cls = new Cls()
     expect(cls.options).to.include({
-      url: 'mongodb://localhost:27017/test',
-      collection: 'docs'
+      url: 'mongodb://localhost:27017'
     })
   })
 
   it('should return options with custom url', function () {
     const cls = new Cls({ 
-      url: 'mongodb://localhost:27017/mydb',
+      url: 'mongodb://mydburl:27017',
     })
     expect(cls.options).to.include({
-      url: 'mongodb://localhost:27017/mydb',
-    })
-  })
-
-  it('should return options with custom collection', function () {
-    const cls = new Cls({ 
-      collection: 'mycoll'
-    })
-    expect(cls.options).to.include({
-      collection: 'mycoll'
+      url: 'mongodb://mydburl:27017',
     })
   })
 

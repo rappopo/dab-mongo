@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.0
+
+* Updated to dab@0.4.0
+
 ## 0.0.6
 
 * Updated to @rappopo/dab@0.0.11
