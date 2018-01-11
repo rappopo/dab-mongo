@@ -135,13 +135,8 @@ class DabMongo extends Dab {
     let limit = params.limit || this.options.limit,
       skip = ((params.page || 1) - 1) * limit,
       query = params.query || {},
-      total, coll, sort = {}
+      total, coll, sort = params.sort || {}
 
-    this._.each(params.sort || [], s => {
-      this._.forOwn(s, (v, k) => {
-        sort[k] = v === 'desc' ? -1 : 1
-      })
-    })
     return new Promise((resolve, reject) => {
       this.getCollection(params.collection)
       .then(collection => {
