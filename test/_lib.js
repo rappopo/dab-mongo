@@ -1,9 +1,8 @@
 'use strict'
 
-const fs = require('fs'),
-  _ = require('lodash'),
-  async = require('async'),
-  client = require('mongodb').MongoClient
+const _ = require('lodash')
+const async = require('async')
+const client = require('mongodb').MongoClient
 
 module.exports = {
   _: _,
@@ -53,14 +52,21 @@ module.exports = {
   ],
   timeout: 5000,
   resetDb: function (callback, fillIn = true) {
-    let coll, me = this
-    async.mapSeries(['schema', 'schemaFull', 'schemaHidden', 'schemaMask', 'schemaBulk'], function(s, callb) {
-      client.connect(me.options.url, function(err, c) {
+    let me = this
+    async.mapSeries(['schema', 'schemaFull', 'schemaHidden', 'schemaMask', 'schemaBulk'], function (s, callb) {
+      client.connect(me.options.url, function (err, c) {
+        if (err) throw err
         const db = c.db(me.options.dbName)
         let coll = db.collection(me[s].name)
-        coll.removeMany(function(err) {
-          if (!fillIn || me[s].name === 'test1') return callb(null, null)
-          coll.insertMany(me.docs, function(err) {
+        coll.removeMany(function (err) {
+          if (err) return callb(err)
+          if (!fillIn || me[s].name === 'test1') {
+            c.close()
+            return callb()
+          }
+          coll.insertMany(me.docs, function (err) {
+            if (err) return callb(err)
+            c.close()
             callb()
           })
         })

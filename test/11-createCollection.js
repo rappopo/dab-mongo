@@ -1,22 +1,32 @@
 'use strict'
 
-const chai = require('chai'),
-  chaiAsPromised = require("chai-as-promised"),
-  expect = chai.expect
+const chai = require('chai')
+const chaiAsPromised = require('chai-as-promised')
+const expect = chai.expect
 
 chai.use(chaiAsPromised)
 
-const Cls = require('../index'),
-  lib = require('./_lib')
+const Cls = require('../index')
+const lib = require('./_lib')
+
+let cls
 
 describe('createCollection', function () {
+  afterEach(function (done) {
+    if (!cls.client) return done()
+    cls.client.then(client => {
+      client.close()
+      done()
+    })
+  })
+
   it('should return error if no collection provided', function () {
-    const cls = new Cls(lib.options)
+    cls = new Cls(lib.options)
     return expect(cls.createCollection({ test: 'blah' })).to.be.rejectedWith('Requires a name')
   })
 
   it('should return error if collection exists', function (done) {
-    const cls = new Cls(lib.options)
+    cls = new Cls(lib.options)
     cls.createCollection({ name: 'test' })
       .then(result => {
         return cls.createCollection({ name: 'test' })
@@ -28,12 +38,11 @@ describe('createCollection', function () {
   })
 
   it('should return success', function (done) {
-    const cls = new Cls(lib.options)
+    cls = new Cls(lib.options)
     cls.createCollection({ name: 'test' })
       .then(result => {
         expect(result).to.have.property('success', true)
         done()
       })
   })
-
 })

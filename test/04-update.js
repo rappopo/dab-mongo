@@ -1,20 +1,23 @@
 'use strict'
 
-const chai = require('chai'),
-  chaiAsPromised = require("chai-as-promised"),
-  expect = chai.expect
+const chai = require('chai')
+const chaiAsPromised = require('chai-as-promised')
+const expect = chai.expect
 
 chai.use(chaiAsPromised)
 
-const Cls = require('../index'),
-  lib = require('./_lib'),
-  body = {
-    name: 'Johnny English MI-7',
-    gender: 'M'
-  },
-  altBody = {
-    gender: 'M'
-  }
+const Cls = require('../index')
+const lib = require('./_lib')
+const body = {
+  name: 'Johnny English MI-7',
+  gender: 'M'
+}
+
+const altBody = {
+  gender: 'M'
+}
+
+let cls
 
 describe('update', function () {
   beforeEach(function (done) {
@@ -25,8 +28,15 @@ describe('update', function () {
     })
   })
 
+  afterEach(function (done) {
+    cls.client.then(client => {
+      client.close()
+      done()
+    })
+  })
+
   it('should return error if collection doesn\'t exist', function (done) {
-    const cls = new Cls(lib.options)
+    cls = new Cls(lib.options)
     cls.createCollection(lib.schema)
       .then(result => {
         return cls.update('no-agent', body, { collection: 'none' })
@@ -38,7 +48,7 @@ describe('update', function () {
   })
 
   it('should return error if doc doesn\'t exist', function (done) {
-    const cls = new Cls(lib.options)
+    cls = new Cls(lib.options)
     cls.createCollection(lib.schema)
       .then(result => {
         return cls.update('no-agent', body, { collection: 'test' })
@@ -50,13 +60,13 @@ describe('update', function () {
   })
 
   it('should return partially updated value', function (done) {
-    const cls = new Cls(lib.options)
+    cls = new Cls(lib.options)
     cls.createCollection(lib.schema)
       .then(result => {
         return cls.update('jack-bauer', body, { collection: 'test' })
       })
       .then(result => {
-        expect(result.success).to.be.true
+        expect(result.success).to.equal(true)
         expect(result.data).to.have.property('name', body.name)
         expect(result.data).to.have.property('gender', 'M')
         done()
@@ -64,13 +74,13 @@ describe('update', function () {
   })
 
   it('should return fully updated value', function (done) {
-    const cls = new Cls(lib.options)
+    cls = new Cls(lib.options)
     cls.createCollection(lib.schema)
       .then(result => {
         return cls.update('jack-bauer', altBody, { collection: 'test', fullReplace: true })
       })
       .then(result => {
-        expect(result.success).to.be.true
+        expect(result.success).to.equal(true)
         expect(result.data).to.have.property('gender', 'M')
         expect(result.data).to.not.have.property('name')
         done()
@@ -78,13 +88,13 @@ describe('update', function () {
   })
 
   it('should return fully updated value and value before updated', function (done) {
-    const cls = new Cls(lib.options)
+    cls = new Cls(lib.options)
     cls.createCollection(lib.schema)
       .then(result => {
         return cls.update('jack-bauer', altBody, { collection: 'test', fullReplace: true, withSource: true })
       })
       .then(result => {
-        expect(result.success).to.be.true
+        expect(result.success).to.equal(true)
         expect(result.data).to.have.property('gender', 'M')
         expect(result.data).to.not.have.property('name')
         expect(result).to.have.property('source').that.include(lib.docs[0])
@@ -93,13 +103,13 @@ describe('update', function () {
   })
 
   it('should return enforced values according to its definitions', function (done) {
-    const cls = new Cls(lib.options)
+    cls = new Cls(lib.options)
     cls.createCollection(lib.schemaFull)
       .then(result => {
         return cls.update('johnny-english', body, { collection: 'full' })
       })
       .then(result => {
-        expect(result.success).to.be.true
+        expect(result.success).to.equal(true)
         expect(result.data).to.have.property('_id', 'johnny-english')
         expect(result.data).to.have.property('name', 'Johnny English MI-7')
         expect(result.data).to.have.property('age', null)
@@ -108,13 +118,13 @@ describe('update', function () {
   })
 
   it('should return enforced values with hidden columns', function (done) {
-    const cls = new Cls(lib.options)
+    cls = new Cls(lib.options)
     cls.createCollection(lib.schemaHidden)
       .then(result => {
         return cls.update('johnny-english', body, { collection: 'hidden' })
       })
       .then(result => {
-        expect(result.success).to.be.true
+        expect(result.success).to.equal(true)
         expect(result.data).to.have.property('_id', 'johnny-english')
         expect(result.data).to.not.have.property('name')
         expect(result.data).to.have.property('age', null)
@@ -123,13 +133,13 @@ describe('update', function () {
   })
 
   it('should return enforced values with masks', function (done) {
-    const cls = new Cls(lib.options)
+    cls = new Cls(lib.options)
     cls.createCollection(lib.schemaMask)
       .then(result => {
         return cls.update('johnny-english', { fullname: 'Johnny English MI-7', gender: 'M' }, { collection: 'mask' })
       })
       .then(result => {
-        expect(result.success).to.be.true
+        expect(result.success).to.equal(true)
         expect(result.data).to.have.property('id', 'johnny-english')
         expect(result.data).to.have.property('fullname', 'Johnny English MI-7')
         expect(result.data).to.have.property('age', null)

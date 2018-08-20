@@ -1,6 +1,6 @@
 {
   "name": "@rappopo/dab-mongo",
-  "version": "0.5.1",
+  "version": "0.6.0",
   "description": "A MongoDB data access layer that kicks butt!",
   "main": "index.js",
   "scripts": {
@@ -21,7 +21,7 @@
     "url": "git+https://github.com/rappopo/dab-mongo.git"
   },
   "dependencies": {
-    "@rappopo/dab": "0.5.1",
+    "@rappopo/dab": "^0.6.9",
     "mongodb": "^3.0.1"
   },
   "devDependencies": {
@@ -29,6 +29,6 @@
     "chai": "^4.1.2",
     "chai-as-promised": "^7.1.1",
     "chai-subset": "^1.6.0",
-    "lodash": "^4.17.4"
+    "lodash": "^4.17.10"
   }
 }

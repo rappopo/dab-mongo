@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.6.0
+
+* Updated to @rappopo/dab@0.6.9
+* Standard JS compliance
+
+## 0.5.1
+
+* Updated to @rappopo/dab@0.5.1
+* Rewrite sort to match the new spec
+
 ## 0.5.0
 
 * Updated to @rappopo/dab@0.5.0
@@ -20,7 +30,7 @@
 ## 0.0.4
 
 * withDetail params in all bulk methods
-* Updated to @rappopo/dab@0.0.6 to have copyFrom & copyTo for free 
+* Updated to @rappopo/dab@0.0.6 to have copyFrom & copyTo for free
 
 ## 0.0.3
 
