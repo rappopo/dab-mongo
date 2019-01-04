@@ -1,7 +1,7 @@
 {
   "name": "@rappopo/dab-mongo",
-  "version": "0.6.4",
-  "description": "A MongoDB data access layer that kicks butt!",
+  "version": "0.6.5",
+  "description": "A MongoDB data access layer for @rappopo/dab",
   "main": "index.js",
   "scripts": {
     "test": "mocha --exit"
@@ -21,7 +21,7 @@
     "url": "git+https://github.com/rappopo/dab-mongo.git"
   },
   "dependencies": {
-    "@rappopo/dab": "^0.6.12",
+    "@rappopo/dab": "^0.6.13",
     "mongodb": "^3.0.1"
   },
   "devDependencies": {
